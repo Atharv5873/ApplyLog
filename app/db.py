@@ -1,6 +1,5 @@
 from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
-from pymongo import ASCENDING
 import os
 
 load_dotenv()

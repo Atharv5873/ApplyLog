@@ -1,0 +1,50 @@
+from pydantic import BaseModel, Field, HttpUrl
+from typing import Dict, Optional
+from datetime import date,datetime
+from enum import Enum
+from .models import PyObjectId
+
+class CategoryEnum(str, Enum):
+    campus="campus"
+    off_campus="off_campus"
+    hackathon="hackathon"
+    
+class StatusEnum(str,Enum):
+    applied = "applied"
+    test = "test"
+    interview = "interview"
+    offer = "offer"
+    rejected = "rejected"
+    withdrawn = "withdrawn"
+    
+class ApplicationBase(BaseModel):
+    company_name: str = Field(...)
+    role: str = Field(...)
+    category: CategoryEnum = Field(...)
+    status: StatusEnum = Field(...)
+    date_applied: date = Field(...)
+    important_dates: Optional[Dict[str, date]] = None
+    links: Optional[Dict[str, HttpUrl]] = None
+    notes: Optional[str] = None
+    
+class ApplicationCreate(ApplicationBase):
+    pass
+
+class ApplicationUpdate(ApplicationBase):
+    company_name: Optional[str]
+    role: Optional[str]
+    category: Optional[CategoryEnum]
+    status: Optional[StatusEnum]
+    date_applied: Optional[date]
+    important_dates: Optional[Dict[str, date]]
+    links: Optional[Dict[str, HttpUrl]]
+    notes: Optional[str]
+    
+class ApplicationInDB(ApplicationBase):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    last_updated: datetime = Field(default_factory=datetime.utcnow)
+
+    class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {PyObjectId: str, datetime: lambda v: v.isoformat()}
+        allow_population_by_field_name = True
