@@ -28,13 +28,13 @@ async def create_application(data: ApplicationCreate) -> str:
     return str(res.inserted_id)
 
 async def get_all_applications(filters:Optional[Dict[str, Any]] = None, skip:int=0,limit:int=100):
-    q=filter or {}
+    q=filters or {}
     cursor=COL.find(q).sort("last_updated",-1).skip(skip).limit(limit)
     docs=[]
     async for doc in cursor:
         doc["_id"] = str(doc["_id"])
         docs.append(doc)
-        return docs
+    return docs
     
 async def get_application_by_id(id: str) -> Optional[Dict[str, Any]]:
     doc=await COL.find_one({"_id": _to_obj_id(id)})
