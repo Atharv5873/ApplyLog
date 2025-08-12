@@ -48,4 +48,4 @@ class ApplicationInDB(ApplicationBase):
     class Config:
         arbitrary_types_allowed = True
         json_encoders = {PyObjectId: str, datetime: lambda v: v.isoformat()}
-        allow_population_by_field_name = True
+        validate_by_name = True
