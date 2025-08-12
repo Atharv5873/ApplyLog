@@ -30,14 +30,15 @@ class ApplicationBase(BaseModel):
 class ApplicationCreate(ApplicationBase):
     pass
 
-class ApplicationUpdate(ApplicationBase):
-    company_name: Optional[str]
-    role: Optional[str]
-    category: Optional[CategoryEnum]
-    status: Optional[StatusEnum]
-    date_applied: Optional[date]
-    important_dates: Optional[Dict[str, date]]
-    links: Optional[Dict[str, HttpUrl]]
+class ApplicationUpdate(BaseModel):
+    company_name: Optional[str] = None
+    role: Optional[str] = None
+    category: Optional[CategoryEnum] = None
+    status: Optional[StatusEnum] = None
+    date_applied: Optional[date] = None
+    important_dates: Optional[Dict[str, date]] = None
+    links: Optional[Dict[str, HttpUrl]] = None
+    notes: Optional[str] = None
     notes: Optional[str]
     
 class ApplicationInDB(ApplicationBase):

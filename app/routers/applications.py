@@ -22,3 +22,21 @@ async def  list_applications(category: Optional[str] = Query(None),
         filters["status"] = status
     apps = await operations.get_all_applications(filters=filters, skip=skip, limit=limit)
     return apps
+
+@router.get("/{id}")
+async def get_application(id: str):
+    doc=await operations.get_application_by_id(id)
+    if not doc:
+        raise HTTPException(status_code=404, detail="Application not found")
+    return doc
+
+@router.put("/{id}")
+async def update_application(id: str, payload: ApplicationUpdate):
+    exists= await operations.get_application_by_id(id)
+    if not exists:
+        raise HTTPException(status_code=404, detail="Application not found")
+    updated= await operations.update_application(id, payload)
+    if not updated:
+        raise HTTPException(status_code=400, detail="Nothing To Update")
+    return {"message": "Application updated successfully"}
+    
