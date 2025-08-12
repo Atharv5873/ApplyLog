@@ -10,7 +10,21 @@ def _to_obj_id(id: str) -> ObjectId:
 async def create_application(data: ApplicationCreate) -> str:
     doc = data.model_dump()
     doc["last_updated"] = datetime.now()
-    res= await COL.insert_one(doc)
+    # Convert all datetime.date values to datetime.datetime and HttpUrl to str
+    from pydantic import HttpUrl
+    def convert_for_mongo(obj):
+        if isinstance(obj, dict):
+            return {k: convert_for_mongo(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [convert_for_mongo(v) for v in obj]
+        elif hasattr(obj, "__class__") and obj.__class__.__name__ == "date":
+            return datetime.combine(obj, datetime.min.time())
+        elif isinstance(obj, HttpUrl):
+            return str(obj)
+        else:
+            return obj
+    doc = convert_for_mongo(doc)
+    res = await COL.insert_one(doc)
     return str(res.inserted_id)
 
 async def get_all_applications(filters:Optional[Dict[str, Any]] = None, skip:int=0,limit:int=100):

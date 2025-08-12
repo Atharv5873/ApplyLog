@@ -1,7 +1,7 @@
 from datetime import datetime
 from bson import ObjectId
 
-class PyOjectId(ObjectId):
+class PyObjectId(ObjectId):
     @classmethod
     def __get_validators__(cls):
         yield cls.validate
@@ -16,5 +16,6 @@ class PyOjectId(ObjectId):
             raise ValueError("Invalid ObjectId") from e
 
     @classmethod
-    def __modify_schema__(cls, field_schema):
-        field_schema.update(type="string")
+    def __get_pydantic_json_schema__(cls, schema):
+        schema.update(type="string")
+        return schema
