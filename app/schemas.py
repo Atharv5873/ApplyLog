@@ -39,7 +39,6 @@ class ApplicationUpdate(BaseModel):
     important_dates: Optional[Dict[str, date]] = None
     links: Optional[Dict[str, HttpUrl]] = None
     notes: Optional[str] = None
-    notes: Optional[str]
     
 class ApplicationInDB(ApplicationBase):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
